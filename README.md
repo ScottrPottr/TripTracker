@@ -7,4 +7,4 @@ Simple application that registers drivers, logs trips, and displays total miles 
 Build with the following command: `./gradlew clean test jar`
 
 ### Run with input
-Then run with the specified input: `cat ~/input.txt | java -jar ./build/libs/TripTracker-0.1.0.jar`
+Then run with the specified input: `cat ./input.txt | java -jar ./build/libs/TripTracker-0.1.0.jar`
