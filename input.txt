@@ -5,4 +5,4 @@ Driver Scott
 Trip Dan 07:15 07:45 17.3
 Trip Dan 06:12 06:32 12.9
 Trip Alex 12:01 13:16 42.0
-Trip Scott 8:32 10:14 70.2
+Trip Scott 08:32 10:14 70.2
