@@ -91,4 +91,39 @@ public class TripTrackerTests {
         assertEquals("Report should order trips by miles driven desc", expectedReport, report);
     }
 
+
+    @Test
+    public void generates_report_sorted_miles_driven_desc_and_alpha_same_mileage() {
+        Driver driver = new Driver("Dan");
+        tripTracker.registerDriver(driver);
+
+        Trip trip = TripTests.buildTestTrip("Dan", "07:15", "07:45", "20.3");
+        tripTracker.logTrip(trip);
+
+        trip = TripTests.buildTestTrip("Dan", "06:12", "06:32", "22.9");
+        tripTracker.logTrip(trip);
+
+        driver = new Driver("Alex");
+        tripTracker.registerDriver(driver);
+        trip = TripTests.buildTestTrip("Alex", "12:01", "13:16", "42.0");
+        tripTracker.logTrip(trip);
+
+        driver = new Driver("Ilya");
+        tripTracker.registerDriver(driver);
+
+        driver = new Driver("Scott");
+        tripTracker.registerDriver(driver);
+        trip = TripTests.buildTestTrip("Scott", "12:01", "13:16", "42.3");
+        tripTracker.logTrip(trip);
+
+        String report = tripTracker.generateReport();
+        String expectedReport = "Dan: 43 miles @ 55 mph\n" +
+                "Alex: 42 miles @ 34 mph\n" +
+                "Scott: 42 miles @ 34 mph\n" +
+                "Ilya: 0 miles";
+
+        assertEquals("Report should order trips by miles driven desc, " +
+                "and then alphabetically if two drivers have the same mileage", expectedReport, report);
+    }
+
 }

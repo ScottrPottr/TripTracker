@@ -35,16 +35,18 @@ public class InMemoryTripTracker implements ITripTracker {
 
     @Override
     public String generateReport() {
-        SortedSet<TripSummary> tripSummaries = new TreeSet<TripSummary>(new Comparator<TripSummary>() {
+        List<TripSummary> tripSummaries = new ArrayList<TripSummary>();
+
+        for(Driver driver : drivers.values()) {
+            tripSummaries.add(driver.getTripSummary());
+        }
+
+        Collections.sort(tripSummaries, new Comparator<TripSummary>() {
             @Override
             public int compare(TripSummary t1, TripSummary t2) {
                 return t2.getMiles().subtract(t1.getMiles()).intValue();
             }
         });
-
-        for(Driver driver : drivers.values()) {
-            tripSummaries.add(driver.getTripSummary());
-        }
 
         StringBuilder stringBuilder = new StringBuilder();
         for(TripSummary tripSummary : tripSummaries) {
