@@ -35,7 +35,7 @@ public class TripTrackerTests {
         tripTracker.logTrip(TripTests.buildTestTrip("Scott", "10:35", "14:15", "200"));
 
         String report = tripTracker.generateReport();
-        assertEquals("Logging trips registers driver is not done already", "Scott: 200 miles @ 55 mph", report);
+        assertEquals("Logging trips registers driver is not done already", "Scott: 200 miles @ 55 mph, 100% hw", report);
     }
 
     @Test
@@ -84,8 +84,8 @@ public class TripTrackerTests {
         tripTracker.registerDriver(driver);
 
         String report = tripTracker.generateReport();
-        String expectedReport = "Dan: 43 miles @ 55 mph\n" +
-                "Alex: 42 miles @ 34 mph\n" +
+        String expectedReport = "Dan: 43 miles @ 55 mph, 53% hw\n" +
+                "Alex: 42 miles @ 34 mph, 0% hw\n" +
                 "Ilya: 0 miles";
 
         assertEquals("Report should order trips by miles driven desc", expectedReport, report);
@@ -97,9 +97,11 @@ public class TripTrackerTests {
         Driver driver = new Driver("Dan");
         tripTracker.registerDriver(driver);
 
+        //40.6mph
         Trip trip = TripTests.buildTestTrip("Dan", "07:15", "07:45", "20.3");
         tripTracker.logTrip(trip);
 
+        //68.7mph
         trip = TripTests.buildTestTrip("Dan", "06:12", "06:32", "22.9");
         tripTracker.logTrip(trip);
 
@@ -117,13 +119,32 @@ public class TripTrackerTests {
         tripTracker.logTrip(trip);
 
         String report = tripTracker.generateReport();
-        String expectedReport = "Dan: 43 miles @ 55 mph\n" +
-                "Alex: 42 miles @ 34 mph\n" +
-                "Scott: 42 miles @ 34 mph\n" +
+        String expectedReport = "Dan: 43 miles @ 55 mph, 53% hw\n" +
+                "Alex: 42 miles @ 34 mph, 0% hw\n" +
+                "Scott: 42 miles @ 34 mph, 0% hw\n" +
                 "Ilya: 0 miles";
 
         assertEquals("Report should order trips by miles driven desc, " +
                 "and then alphabetically if two drivers have the same mileage", expectedReport, report);
+    }
+
+    @Test
+    public void generates_report_includes_percentage_highway_miles_per_driver() {
+        Driver driver = new Driver("Jimmy");
+        tripTracker.registerDriver(driver);
+
+        Trip trip = TripTests.buildTestTrip("Jimmy", "07:15", "07:30", "20");
+        tripTracker.logTrip(trip);
+
+        driver = new Driver("Scott");
+        tripTracker.registerDriver(driver);
+
+        String report = tripTracker.generateReport();
+        String expectedReport = "Jimmy: 20 miles @ 80 mph, 100% hw\n" +
+                "Scott: 0 miles";
+
+        assertEquals("Report should display highway miles as percent of total miles if miles driven, " +
+                "and not display highway miles if no miles driven", expectedReport, report);
     }
 
 }

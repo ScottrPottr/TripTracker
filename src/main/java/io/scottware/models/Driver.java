@@ -18,16 +18,26 @@ public class Driver {
 
     public TripSummary getTripSummary() {
         BigDecimal totalMiles = BigDecimal.ZERO;
+        BigDecimal highwayMiles = BigDecimal.ZERO;
         BigDecimal speeds = BigDecimal.ZERO;
         for(Trip trip : trips) {
             totalMiles = totalMiles.add(trip.getMilesDriven());
-            speeds = speeds.add(trip.getSpeed());
+            BigDecimal speed = trip.getSpeed();
+            speeds = speeds.add(speed);
+            if(speed.compareTo(BigDecimal.valueOf(50, 0)) > 0) {
+                highwayMiles = highwayMiles.add(trip.getMilesDriven());
+            }
         }
         BigDecimal averageSpeed = BigDecimal.ZERO;
         if(speeds.compareTo(BigDecimal.ZERO) > 0) {
             averageSpeed = speeds.divide(new BigDecimal(trips.size()), 4, BigDecimal.ROUND_HALF_UP);
         }
-        return new TripSummary(name, totalMiles.setScale(0, BigDecimal.ROUND_HALF_UP), averageSpeed.setScale(0, BigDecimal.ROUND_HALF_UP));
+        BigDecimal percentageHighwayMiles = BigDecimal.ZERO;
+        if(highwayMiles.compareTo(BigDecimal.ZERO) > 0) {
+            percentageHighwayMiles = highwayMiles.divide(totalMiles, 4, BigDecimal.ROUND_HALF_UP);
+            percentageHighwayMiles = percentageHighwayMiles.multiply(BigDecimal.valueOf(100, 0));
+        }
+        return new TripSummary(name, totalMiles.setScale(0, BigDecimal.ROUND_HALF_UP), averageSpeed.setScale(0, BigDecimal.ROUND_HALF_UP), percentageHighwayMiles.setScale(0, BigDecimal.ROUND_HALF_UP));
     }
 
     public String getName() {
